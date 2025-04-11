@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Appointment Booking System</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Student Appointment Booking</h2>
+    <form id="bookingForm">
+      <div class="input-box">
+        <input type="text" id="studentName" required />
+        <span>Student Name</span>
+      </div>
+
+      <div class="input-box">
+        <input type="email" id="studentEmail" required />
+        <span>Email</span>
+      </div>
+
+      <div class="input-box">
+        <input type="text" id="teacherName" required />
+        <span>Teacher Name</span>
+      </div>
+
+      <div class="input-box">
+        <input type="datetime-local" id="appointmentTime" required />
+        <span>Appointment Time</span>
+      </div>
+
+      <div class="input-box">
+        <textarea id="message" rows="3" required></textarea>
+        <span>Message / Purpose</span>
+      </div>
+
+      <input type="submit" value="Book Appointment" class="submit-btn" />
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMDFLnL5yEsaJbP0aCdHR2ONV-l-AcUEM",
+      authDomain: "data-c2dcc.firebaseapp.com",
+      projectId: "data-c2dcc",
+      storageBucket: "data-c2dcc.appspot.com",
+      messagingSenderId: "201735021937",
+      appId: "1:201735021937:web:02004ee78c4b3c35f802d0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const form = document.getElementById("bookingForm");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const studentName = document.getElementById("studentName").value;
+      const studentEmail = document.getElementById("studentEmail").value;
+      const teacherName = document.getElementById("teacherName").value;
+      const appointmentTime = document.getElementById("appointmentTime").value;
+      const message = document.getElementById("message").value;
+
+      push(ref(db, 'appointments/'), {
+        studentName,
+        studentEmail,
+        teacherName,
+        appointmentTime,
+        message
+      })
+      .then(() => {
+        alert("Appointment booked successfully!");
+        form.reset();
+      })
+      .catch((error) => {
+        alert("Error booking appointment: " + error);
+      });
+    });
+  </script>
+
+</body>
+</html>
